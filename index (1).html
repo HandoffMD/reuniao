@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agendar Reunião — Projeto Nutrição Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --sage:#7A9E7E;--sage-d:#4E7A53;--sage-l:#B8D4BB;--sage-xl:#E1EDE2;
+  --cream:#F5F0E8;--warm:#EAD9BC;--dark:#1A2B1C;--text:#344435;
+  --accent:#C07A3A;--accent-l:#E8A86A;
+  --gold:#D4A853;
+}
+
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--cream);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── GRAIN OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.4;
+}
+
+/* ── HERO SECTION ── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:64px 24px;
+  position:relative;
+  background:var(--dark);
+  overflow:hidden;
+  text-align:center;
+}
+
+.hero-orb{
+  position:absolute;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(122,158,126,0.15) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:pulse 6s ease-in-out infinite;
+}
+.hero-orb2{
+  position:absolute;width:900px;height:900px;border-radius:50%;
+  background:radial-gradient(circle,rgba(122,158,126,0.06) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:pulse 9s ease-in-out infinite reverse;
+}
+@keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.08)}}
+
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--sage-l);margin-bottom:32px;
+  padding:8px 20px;border:1px solid rgba(122,158,126,0.3);border-radius:100px;
+  animation:fadeDown .8s ease both;
+}
+.hero-tag::before{content:'✦';font-size:10px;color:var(--sage)}
+
+.hero-eyebrow{
+  font-size:12px;letter-spacing:6px;text-transform:uppercase;
+  color:var(--sage);margin-bottom:20px;
+  animation:fadeDown .8s .1s ease both;
+}
+
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px,8vw,96px);font-weight:700;line-height:1;
+  color:#F5F0E8;margin-bottom:8px;
+  animation:fadeDown .8s .2s ease both;
+}
+.hero-title em{font-style:italic;color:var(--sage-l)}
+
+.hero-sub-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(22px,4vw,38px);font-weight:400;font-style:italic;
+  color:rgba(245,240,232,0.45);margin-bottom:40px;
+  animation:fadeDown .8s .3s ease both;
+}
+
+.hero-desc{
+  font-size:15px;color:rgba(245,240,232,0.5);
+  max-width:480px;line-height:1.8;margin-bottom:56px;
+  animation:fadeDown .8s .4s ease both;
+}
+
+.scroll-cta{
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  cursor:pointer;animation:fadeDown .8s .6s ease both;
+  transition:opacity .3s;
+}
+.scroll-cta:hover{opacity:.7}
+.scroll-cta span{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(245,240,232,0.4)}
+.scroll-arrow{
+  width:40px;height:40px;border:1px solid rgba(122,158,126,0.3);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;color:var(--sage-l);
+  font-size:16px;animation:bounce 2s ease-in-out infinite;
+}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SPOILER SECTION ── */
+.spoiler{
+  padding:96px 24px;
+  background:var(--cream);
+  position:relative;overflow:hidden;
+}
+.spoiler::before{
+  content:'';position:absolute;top:-200px;right:-200px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(122,158,126,0.08),transparent 70%);
+}
+
+.section-inner{max-width:800px;margin:0 auto}
+.eyebrow{font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--sage);margin-bottom:16px}
+.section-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,5vw,58px);font-weight:700;line-height:1.1;
+  color:var(--dark);margin-bottom:48px;
+}
+.section-title em{font-style:italic;color:var(--sage-d)}
+
+.topics-grid{display:flex;flex-direction:column;gap:16px}
+.topic-card{
+  display:flex;align-items:flex-start;gap:24px;
+  padding:28px 32px;border-radius:20px;
+  border:1px solid rgba(122,158,126,0.15);
+  background:white;
+  cursor:default;transition:all .35s;
+  position:relative;overflow:hidden;
+}
+.topic-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--sage),var(--sage-l));
+  transform:scaleY(0);transition:transform .35s;
+  transform-origin:bottom;
+}
+.topic-card:hover{transform:translateX(6px);border-color:rgba(122,158,126,0.4);box-shadow:0 8px 32px rgba(28,43,30,0.08)}
+.topic-card:hover::before{transform:scaleY(1)}
+.topic-num{
+  font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;
+  color:rgba(122,158,126,0.25);flex-shrink:0;line-height:1;margin-top:2px;
+  transition:color .3s;
+}
+.topic-card:hover .topic-num{color:var(--sage)}
+.topic-body strong{display:block;font-size:15px;color:var(--dark);margin-bottom:6px;font-weight:500}
+.topic-body span{font-size:13px;color:#7A8A7C;line-height:1.6}
+.topic-tag{
+  margin-top:10px;display:inline-block;
+  font-size:10px;padding:4px 12px;border-radius:100px;letter-spacing:1px;
+  background:var(--sage-xl);color:var(--sage-d);
+}
+
+/* ── SCHEDULER SECTION ── */
+.scheduler{
+  padding:96px 24px;
+  background:var(--dark);
+  position:relative;overflow:hidden;
+}
+.scheduler::before{
+  content:'';position:absolute;bottom:-300px;left:-300px;
+  width:700px;height:700px;border-radius:50%;
+  background:radial-gradient(circle,rgba(122,158,126,0.1),transparent 70%);
+}
+
+.scheduler-inner{max-width:640px;margin:0 auto;position:relative}
+
+.sched-eyebrow{font-size:11px;letter-spacing:5px;text-transform:uppercase;color:var(--sage);margin-bottom:16px}
+.sched-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,5vw,56px);font-weight:700;line-height:1.1;
+  color:var(--cream);margin-bottom:12px;
+}
+.sched-title em{font-style:italic;color:var(--sage-l)}
+.sched-sub{font-size:14px;color:rgba(245,240,232,0.45);line-height:1.7;margin-bottom:56px}
+
+/* FORM */
+.form-card{
+  background:rgba(255,255,255,0.04);border:1px solid rgba(122,158,126,0.18);
+  border-radius:28px;padding:40px;backdrop-filter:blur(12px);
+}
+
+.form-group{margin-bottom:28px}
+.form-label{
+  display:block;font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--sage-l);margin-bottom:10px;
+}
+
+.form-input{
+  width:100%;padding:16px 20px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(122,158,126,0.2);border-radius:14px;
+  color:var(--cream);font-family:'DM Sans',sans-serif;font-size:15px;
+  outline:none;transition:all .3s;
+  -webkit-appearance:none;
+}
+.form-input:focus{border-color:var(--sage);background:rgba(122,158,126,0.08)}
+.form-input::placeholder{color:rgba(245,240,232,0.25)}
+.form-input option{background:#1A2B1C;color:var(--cream)}
+
+/* CALENDAR STRIP */
+.cal-label{
+  font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--sage-l);margin-bottom:12px;display:block;
+}
+.cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.cal-month{
+  font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;
+  color:var(--cream);
+}
+.cal-btn{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(122,158,126,0.25);background:transparent;
+  color:var(--sage-l);cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .3s;
+}
+.cal-btn:hover{background:var(--sage);border-color:var(--sage);color:white}
+.cal-days-header{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  gap:4px;margin-bottom:8px;
+}
+.cal-day-name{
+  text-align:center;font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(245,240,232,0.3);padding:4px 0;
+}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-cell{
+  aspect-ratio:1;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:400;
+  cursor:pointer;transition:all .25s;
+  border:1px solid transparent;
+  color:rgba(245,240,232,0.6);
+}
+.cal-cell:hover:not(.disabled):not(.empty){
+  background:rgba(122,158,126,0.15);
+  border-color:rgba(122,158,126,0.3);
+  color:var(--cream);
+}
+.cal-cell.selected{
+  background:var(--sage);color:white;
+  border-color:var(--sage);font-weight:500;
+}
+.cal-cell.today{border-color:rgba(122,158,126,0.4);color:var(--sage-l)}
+.cal-cell.disabled{opacity:.2;cursor:not-allowed}
+.cal-cell.empty{cursor:default}
+
+/* TIME PILLS */
+.time-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.time-pill{
+  padding:9px 18px;border-radius:100px;
+  border:1px solid rgba(122,158,126,0.2);background:rgba(255,255,255,0.03);
+  color:rgba(245,240,232,0.6);font-size:13px;cursor:pointer;
+  transition:all .25s;font-family:'DM Sans',sans-serif;
+}
+.time-pill:hover{border-color:var(--sage);color:var(--sage-l);background:rgba(122,158,126,0.08)}
+.time-pill.selected{background:var(--sage);border-color:var(--sage);color:white}
+
+.divider{height:1px;background:rgba(122,158,126,0.12);margin:28px 0}
+
+/* SUBMIT BUTTON */
+.btn-submit{
+  width:100%;padding:18px;border-radius:16px;
+  background:var(--sage);border:none;
+  color:white;font-family:'DM Sans',sans-serif;
+  font-size:15px;font-weight:500;letter-spacing:.5px;
+  cursor:pointer;transition:all .3s;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.btn-submit::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.btn-submit:hover{background:var(--sage-d);transform:translateY(-2px);box-shadow:0 12px 36px rgba(78,122,83,0.4)}
+.btn-submit:hover::before{opacity:1}
+.btn-submit:active{transform:translateY(0)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.whatsapp-icon{font-size:18px}
+
+/* ── SUCCESS STATE ── */
+.success-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(26,43,28,0.97);backdrop-filter:blur(20px);
+  z-index:1000;
+  flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:32px;
+}
+.success-overlay.show{display:flex;animation:fadeUp .6s ease}
+
+.success-ring{
+  width:96px;height:96px;border-radius:50%;
+  background:rgba(122,158,126,0.15);border:1.5px solid var(--sage);
+  display:flex;align-items:center;justify-content:center;
+  font-size:40px;margin-bottom:32px;
+  animation:ringPop .6s .2s ease both;
+}
+@keyframes ringPop{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+
+.success-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,6vw,60px);font-weight:700;
+  color:var(--cream);line-height:1.1;margin-bottom:16px;
+}
+.success-title em{font-style:italic;color:var(--sage-l)}
+.success-sub{font-size:15px;color:rgba(245,240,232,0.55);max-width:420px;line-height:1.8;margin-bottom:12px}
+.success-date-display{
+  font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;
+  color:var(--sage-l);margin-bottom:40px;
+}
+
+.btn-confirm-wa{
+  padding:16px 48px;border-radius:100px;
+  background:#25D366;border:none;
+  color:white;font-family:'DM Sans',sans-serif;
+  font-size:15px;font-weight:500;cursor:pointer;
+  transition:all .3s;display:inline-flex;align-items:center;gap:10px;
+  margin-bottom:16px;
+}
+.btn-confirm-wa:hover{background:#1EB857;transform:translateY(-2px);box-shadow:0 12px 36px rgba(37,211,102,0.35)}
+
+.btn-back{
+  display:block;font-size:13px;color:rgba(245,240,232,0.35);
+  cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;
+  transition:color .3s;margin-top:8px;
+}
+.btn-back:hover{color:rgba(245,240,232,0.6)}
+
+/* FOOTER */
+footer{
+  padding:48px 24px;background:var(--dark);
+  border-top:1px solid rgba(122,158,126,0.1);
+  text-align:center;
+}
+.footer-logo{
+  font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;
+  color:rgba(245,240,232,0.2);margin-bottom:12px;
+}
+.footer-sub{font-size:12px;color:rgba(245,240,232,0.15);letter-spacing:2px;text-transform:uppercase}
+
+/* UTILS */
+.observe{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.observe.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-orb2"></div>
+
+  <div class="hero-tag">Convite exclusivo</div>
+  <div class="hero-eyebrow">Projeto Nutrição Digital</div>
+  <h1 class="hero-title">Vamos <em>criar</em><br>algo incrível</h1>
+  <p class="hero-sub-title">juntos.</p>
+  <p class="hero-desc">Você tem o conhecimento.<br>Eu tenho a tecnologia.<br>Juntas, vamos transformar sua expertise em um produto digital completo.</p>
+
+  <div class="scroll-cta" onclick="document.querySelector('.spoiler').scrollIntoView({behavior:'smooth'})">
+    <span>Ver o que vamos discutir</span>
+    <div class="scroll-arrow">↓</div>
+  </div>
+</section>
+
+<!-- ── SPOILER ── -->
+<section class="spoiler">
+  <div class="section-inner">
+    <div class="observe">
+      <div class="eyebrow">✦ Prévia da reunião</div>
+      <h2 class="section-title">O que vamos<br>construir <em>juntos.</em></h2>
+    </div>
+
+    <div class="topics-grid">
+      <div class="topic-card observe">
+        <div class="topic-num">01</div>
+        <div class="topic-body">
+          <strong>Seu E-book Nutricional</strong>
+          <span>Design editorial profissional, estrutura de conteúdo estratégica, tabelas calóricas e infográficos que posicionam você como autoridade no mercado.</span>
+          <div class="topic-tag">E-book em PDF</div>
+        </div>
+      </div>
+      <div class="topic-card observe">
+        <div class="topic-num">02</div>
+        <div class="topic-body">
+          <strong>O Aplicativo de Nutrição</strong>
+          <span>Calculadora de calorias e macros, controle de refeições, progresso visual — tudo com sua marca e identidade, funcionando no celular sem precisar baixar nada.</span>
+          <div class="topic-tag">App Web + PWA</div>
+        </div>
+      </div>
+      <div class="topic-card observe">
+        <div class="topic-num">03</div>
+        <div class="topic-body">
+          <strong>Inteligência Artificial no seu negócio</strong>
+          <span>Como integrar IA para sugestões alimentares personalizadas, geração de planos e análise de padrões — um diferencial real que seus concorrentes ainda não têm.</span>
+          <div class="topic-tag">IA integrada</div>
+        </div>
+      </div>
+      <div class="topic-card observe">
+        <div class="topic-num">04</div>
+        <div class="topic-body">
+          <strong>Identidade Visual & Marca</strong>
+          <span>Cores, tipografia, ícones e linguagem visual que conectam o e-book e o app numa experiência coesa — profissional do começo ao fim.</span>
+          <div class="topic-tag">Design de marca</div>
+        </div>
+      </div>
+      <div class="topic-card observe">
+        <div class="topic-num">05</div>
+        <div class="topic-body">
+          <strong>Prazo, Processo e Próximos Passos</strong>
+          <span>Como funciona cada etapa, o que você precisa preparar, qual o cronograma realista e como vamos trabalhar juntas do briefing até a entrega.</span>
+          <div class="topic-tag">Planejamento</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SCHEDULER ── -->
+<section class="scheduler">
+  <div class="scheduler-inner">
+    <div class="observe">
+      <div class="sched-eyebrow">✦ Agendar reunião</div>
+      <h2 class="sched-title">Escolha o melhor<br>momento <em>para você.</em></h2>
+      <p class="sched-sub">Reunião online via Google Meet · Duração aproximada: 1 hora</p>
+    </div>
+
+    <div class="form-card observe">
+
+      <!-- CALENDAR -->
+      <label class="cal-label">Selecione a data</label>
+      <div class="cal-nav">
+        <button class="cal-btn" onclick="changeMonth(-1)">←</button>
+        <div class="cal-month" id="calMonth"></div>
+        <button class="cal-btn" onclick="changeMonth(1)">→</button>
+      </div>
+      <div class="cal-days-header">
+        <div class="cal-day-name">Dom</div>
+        <div class="cal-day-name">Seg</div>
+        <div class="cal-day-name">Ter</div>
+        <div class="cal-day-name">Qua</div>
+        <div class="cal-day-name">Qui</div>
+        <div class="cal-day-name">Sex</div>
+        <div class="cal-day-name">Sáb</div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+
+      <div class="divider"></div>
+
+      <!-- TIME -->
+      <label class="cal-label">Selecione o horário</label>
+      <div class="time-pills" id="timePills"></div>
+
+      <div class="divider"></div>
+
+      <!-- NAME -->
+      <div class="form-group">
+        <label class="form-label">Seu nome</label>
+        <input type="text" class="form-input" id="inputName" placeholder="Como posso te chamar?">
+      </div>
+
+      <!-- SUBMIT -->
+      <button class="btn-submit" id="btnSubmit" onclick="handleSubmit()" disabled>
+        <span class="whatsapp-icon">💬</span>
+        <span>Confirmar e enviar pelo WhatsApp</span>
+      </button>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Projeto Nutrição Digital</div>
+  <div class="footer-sub">Tecnologia que transforma conhecimento em produto</div>
+</footer>
+
+<!-- ── SUCCESS OVERLAY ── -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-ring">🌿</div>
+  <h2 class="success-title">Reunião<br><em>agendada!</em></h2>
+  <p class="success-sub">Sua confirmação está sendo enviada via WhatsApp. Estou animado para conversar com você!</p>
+  <div class="success-date-display" id="successDateDisplay"></div>
+  <button class="btn-confirm-wa" id="btnWA">
+    <span>📲</span> Abrir WhatsApp agora
+  </button>
+  <button class="btn-back" onclick="closeSuccess()">← Voltar e alterar</button>
+</div>
+
+<script>
+// ── STATE ──
+let selDate = null, selTime = null;
+let calYear, calMonth;
+const today = new Date();
+today.setHours(0,0,0,0);
+
+const PHONE = '5544999910598';
+const TIMES = ['08:00','09:00','10:00','11:00','14:00','15:00','16:00','17:00'];
+const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const WEEKDAYS = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+
+calYear = today.getFullYear();
+calMonth = today.getMonth();
+
+// ── CALENDAR ──
+function renderCal(){
+  const monthEl = document.getElementById('calMonth');
+  monthEl.textContent = MONTHS[calMonth] + ' ' + calYear;
+
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  const first = new Date(calYear, calMonth, 1).getDay();
+  const days = new Date(calYear, calMonth+1, 0).getDate();
+
+  for(let i=0;i<first;i++){
+    const c=document.createElement('div');
+    c.className='cal-cell empty';
+    grid.appendChild(c);
+  }
+
+  for(let d=1;d<=days;d++){
+    const date = new Date(calYear,calMonth,d);
+    const c=document.createElement('div');
+    c.className='cal-cell';
+    c.textContent=d;
+
+    if(date < today){ c.classList.add('disabled'); }
+    else {
+      if(date.getTime()===today.getTime()) c.classList.add('today');
+      if(selDate && date.toDateString()===selDate.toDateString()) c.classList.add('selected');
+      c.onclick=()=>selectDate(date,c);
+    }
+    grid.appendChild(c);
+  }
+}
+
+function selectDate(date,cell){
+  selDate=date;
+  document.querySelectorAll('.cal-cell').forEach(c=>c.classList.remove('selected'));
+  cell.classList.add('selected');
+  checkReady();
+}
+
+function changeMonth(d){
+  calMonth+=d;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  renderCal();
+}
+
+// ── TIME PILLS ──
+function renderTimes(){
+  const container=document.getElementById('timePills');
+  container.innerHTML='';
+  TIMES.forEach(t=>{
+    const pill=document.createElement('button');
+    pill.className='time-pill';
+    pill.textContent=t;
+    pill.onclick=()=>{
+      selTime=t;
+      document.querySelectorAll('.time-pill').forEach(p=>p.classList.remove('selected'));
+      pill.classList.add('selected');
+      checkReady();
+    };
+    container.appendChild(pill);
+  });
+}
+
+// ── FORM VALIDATION ──
+function checkReady(){
+  const name=document.getElementById('inputName').value.trim();
+  const btn=document.getElementById('btnSubmit');
+  btn.disabled=!(selDate && selTime && name.length>1);
+}
+document.getElementById('inputName').addEventListener('input',checkReady);
+
+// ── SUBMIT ──
+function handleSubmit(){
+  const name=document.getElementById('inputName').value.trim();
+  const dateStr=selDate.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  const displayStr=selDate.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'}) + ' · ' + selTime;
+
+  document.getElementById('successDateDisplay').textContent=displayStr;
+
+  const msg=`Olá! 🌿 Sou ${name} e acabei de agendar nossa reunião pelo site!\n\n📅 *Data:* ${dateStr}\n🕐 *Horário:* ${selTime}\n\n*Pautas que vamos discutir:*\n✦ E-book nutricional profissional\n✦ Aplicativo de calorias e macros\n✦ Inteligência artificial integrada\n✦ Identidade visual e marca\n✦ Processo, prazo e próximos passos\n\nEstou animado para começar! 🚀`;
+
+  const waURL=`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`;
+  document.getElementById('btnWA').onclick=()=>window.open(waURL,'_blank');
+
+  document.getElementById('successOverlay').classList.add('show');
+}
+
+function closeSuccess(){
+  document.getElementById('successOverlay').classList.remove('show');
+}
+
+// ── SCROLL OBSERVER ──
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('visible')});
+},{threshold:0.15});
+document.querySelectorAll('.observe').forEach(el=>obs.observe(el));
+
+// ── INIT ──
+renderCal();
+renderTimes();
+</script>
+</body>
+</html>
